@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+   <!-- General description of your Web application -->
+   <display-name>
+      CNT 4714 Spring 2018 JSP-Servlet-App Example
+   </display-name>
+   <description>
+      This is the Web application in which we 
+      will demonstrate our first servlet example.
+   </description>
+   <servlet>
+      <servlet-name>ProjFour</servlet-name>
+      <servlet-class>ProjFour</servlet-class>
+      <init-param>
+      	<param-name>databaseDriver</param-name>
+      	<param-value>com.mysql.cj.jdbc.Driver</param-value>
+      </init-param>
+      
+      <init-param>
+      	<param-name>databaseName</param-name>
+      	<param-value>jdbc:mysql://localhost:3306/project4</param-value>
+      </init-param>
+      
+      <init-param>
+      	<param-name>username</param-name>
+      	<param-value>root</param-value>
+      </init-param>
+      
+      <init-param>
+      	<param-name>password</param-name>
+      	<param-value>sky551er</param-value>
+      </init-param>
+      
+           
+      
+      
+   </servlet>
+   <servlet-mapping>
+      <servlet-name>ProjFour</servlet-name>
+      <url-pattern>/Project4</url-pattern>
+   </servlet-mapping>
+   
+</web-app>
