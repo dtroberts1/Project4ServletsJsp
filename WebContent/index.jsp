@@ -5,10 +5,19 @@
 <!-- the original user page -->
 
 <%-- start scriptlet --%>
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="java.sql.ResultSetMetaData" %>
+
+
 <%
+
+	
    String firstName = (String) session.getAttribute("firstName");
+   String errorOut = (String) session.getAttribute("errorOutput");
+   String outputResultSet = null;
 
    String message = (String) session.getAttribute("message");
+  
    if (message ==null) message = " ";
 %>
 
@@ -42,7 +51,7 @@
 			All execution results will appear below. 
 	   </p>
 	   		<!-- Input Area -->
-		   <!--  <form action = "/JSP-Servlet-App/Project4" method = "post"> -->
+		     <form action = "/Project4/Project4" method = "post">
 		   <div style=" text-align:center">
 			   <textArea name="inTextArea"style="background-color:black; color:green; font-size:9px" rows="7" cols="70" autofocus>
 			   </textArea>
@@ -54,18 +63,75 @@
 					Reset Form
 				</button> -->
 				</div>
-			<!-- </form> -->
+			</form>
       <hr>
 	  	            <div style="color: white; text-align:center; font-size:14px">Database Results:</div>
 
 	  </hr>
+	  <%
+	  		  	if (request.getAttribute("errorOutput") != null){
+		  		int i = 0;
+		  		%><div style="background-color:red;font-size: 12px; margin-left:33%; width:33%; color:white; display:inline-block; padding: 2px; border-width:3px; 
+		  		border-style:solid; border-color:black; text-align:center">
+		  		Error Executing SQL Statement: <br/>
+		  			<%=request.getAttribute("errorOutput").toString()%>
+		  		</div><%
+		  	}
+   %>
 	    <table style="font-size: 12px; border-style:groove; border-width:2px; border-color:black; align:center; margin-left:auto; margin-right:auto">
-		  <tr style="background-color:red; color:black">
-			<td>snum</td>
-			<td>sname</td>
-			<td>status</td>
-			<td>city</td>
-		  </tr>
+		  <%
+		  	if (request.getSession().getAttribute("outputResultSet") != null){
+		  		int currentRow;
+		  		if ((request.getSession() != null) && (request.getSession().getAttribute("outputResultSet") != null))
+		  		{
+				  	ResultSet rs = (ResultSet)request.getSession().getAttribute("outputResultSet");
+				  	if ((rs != null) && (!rs.isClosed())){
+						//System.out.print(rs.toString());
+						//rs.beforeFirst();
+						System.out.println();
+						System.out.println();
+
+						ResultSetMetaData metaData = rs.getMetaData();
+						if (metaData != null){
+							int nbrCols = metaData.getColumnCount();
+							// Display Columns in the first row
+							%><tr style="background-color:red; color:black"><%
+							for (int i = 1; i <= nbrCols; i++){
+								%><td><%= metaData.getColumnName(i)
+								%></td><%
+							}
+							%></tr><%
+							rs.beforeFirst();
+							currentRow = 0;
+							while (rs.next()) {
+								if (currentRow % 2 != 0)
+								{
+									%><tr style="background-color:#b1d3eb; color:black"><%
+								}
+								else{
+									%><tr style="background-color:white; color:black"><%
+								}
+								for (int currentCol = 1; currentCol < (nbrCols + 1); currentCol++)
+								{
+									%><td><%= rs.getString(metaData.getColumnName(currentCol))
+											%></td><%
+								}
+								%></tr><%
+								currentRow++;
+							}
+						}
+						rs.close();
+
+				  	}
+				  	else if (rs.isClosed()){
+						System.out.println();
+
+				  	}
+		  		}
+
+		  	}
+		  
+		  %>
 		</table>
 
 
