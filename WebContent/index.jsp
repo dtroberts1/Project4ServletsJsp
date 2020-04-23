@@ -14,6 +14,10 @@
 	
    String firstName = (String) session.getAttribute("firstName");
    String errorOut = (String) session.getAttribute("errorOutput");
+   String busLogDet = (String) session.getAttribute("logicDetected");
+   String nbrRowsAffected = (String)session.getAttribute("nbrRowsAffected");
+   String statusMarks = (String)session.getAttribute("statusMarks");
+
    String outputResultSet = null;
 
    String message = (String) session.getAttribute("message");
@@ -53,7 +57,7 @@
 	   		<!-- Input Area -->
 		     <form action = "/Project4/Project4" method = "post">
 		   <div style=" text-align:center">
-			   <textArea name="inTextArea"style="background-color:black; color:green; font-size:9px" rows="7" cols="70" autofocus>
+			   <textArea name="inTextArea"style="background-color:black; color:#66ff33; font-size:9px" rows="7" cols="70" autofocus>
 			   </textArea>
 		   </div>
 			   <div style="text-align:center">
@@ -75,6 +79,21 @@
 		  		border-style:solid; border-color:black; text-align:center">
 		  		Error Executing SQL Statement: <br/>
 		  			<%=request.getAttribute("errorOutput").toString()%>
+		  		</div><%
+		  	}
+   %>
+   	  <%
+	  		  	if (request.getAttribute("logicDetected") != null){
+		  		int i = 0;
+		  		%><div style="background-color:green;font-size: 12px; margin-left:33%; width:33%; color:white; display:inline-block; padding: 2px; border-width:3px; 
+		  		border-style:solid; border-color:black; text-align:center">
+		  		<span style="color:black">
+		  		The Statement Executed Successfully <br/>
+		  		<%=request.getAttribute("nbrRowsAffected").toString()%> row(s) affected <br/>
+		  		</span>
+		  		<span style="color:white"><%=request.getAttribute("logicDetected").toString()%></span>
+		  		<span style="color:white">Business Logic Updated <%=request.getAttribute("statusMarks").toString() %> Supplier Marks </span>
+		  			<br />
 		  		</div><%
 		  	}
    %>
@@ -133,14 +152,6 @@
 		  
 		  %>
 		</table>
-
-
-      <form action = "/Project4/Project4" method = "post">
-               <p>Type your first name and press Submit</p>
-               <p><input type = "text" name = "firstName">  </input>
-                  <input type = "submit" value = "Submit Your Name" />
-               </p>
-      </form>
 
       <br><br><br>
       <h2>

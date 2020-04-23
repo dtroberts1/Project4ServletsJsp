@@ -60,6 +60,10 @@ public class ProjFour extends HttpServlet {
 		      session.setAttribute("outputResultSet",  rs);
 
 	      }
+	      else if ((inTextArea != null) && (inTextArea.split(" ") != null) && (inTextArea.split(" ")[0].equals("insert") || inTextArea.split(" ")[0].equals("update")))
+	      {
+	    	  insertDataIntoDb(inTextArea, request, response);
+	      }
 	      else {
 	    	  System.out.println();
 	
@@ -74,6 +78,28 @@ public class ProjFour extends HttpServlet {
 	          
 	      }
    
+    }
+    public void insertDataIntoDb(String insertionStr, HttpServletRequest request, HttpServletResponse response) {
+    	int nbrRowsUpdated = 0;
+    	int nbrSupplierStatus = 0;
+    	// Upgrade the status of the supplier
+    	 try {
+    		 nbrRowsUpdated = statement.executeUpdate(insertionStr);
+    		 // If inserting into shipment in which the quantity is greater than 100
+    		 String tableName = insertionStr.split(" ")[2];
+    		 if (tableName.equals("shipments") || insertionStr.split(" ")[1].equals("shipments"))
+    			 nbrSupplierStatus = statement.executeUpdate("UPDATE suppliers Set status = status + 5 where snum in (select snum from shipments where quantity > 100)");
+		      request.setAttribute("logicDetected",  "Business Logic Detected! - Updating Supplier Status");
+		      String myStr = String.valueOf(nbrRowsUpdated);
+		      String strB = String.valueOf(nbrSupplierStatus);
+		      request.setAttribute("nbrRowsAffected",  myStr);
+		      request.setAttribute("statusMarks",  strB);
+
+	
+    	 } catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     public void doPost(HttpServletRequest request, HttpServletResponse response )
